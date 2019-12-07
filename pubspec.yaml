@@ -20,13 +20,18 @@ dependencies:
   flutter:
     sdk: flutter
   qrcode_reader: ^0.4.4
+  
   http: ^0.12.0+2
   corsac_jwt: ^0.1.2
   web3dart: ^1.2.1
+  hex: ^0.1.2
+ # Crypto
+  bip32: ^1.0.5
   bip39: ^1.0.3
-  ed25519_hd_key: ^1.0.1
-  shared_preferences: ^0.5.4+6
+  sacco: 0.0.7
   pointycastle: ^1.0.2
+
+  shared_preferences: ^0.5.4+6
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
