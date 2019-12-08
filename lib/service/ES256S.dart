@@ -20,6 +20,9 @@ class ES256S implements JWTSigner {
     final k = ECK(_key);
     List<int> sigList = await k.sign(Uint8List.fromList(data));
     return sigList;
+
+    //why is the length 64 when recover index is == 0        ??????
+    //Bug Uint8List + operator ???
   }
 
   @override
