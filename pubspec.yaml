@@ -30,8 +30,10 @@ dependencies:
   bip39: ^1.0.3
   sacco: 0.0.7
   pointycastle: ^1.0.2
-
+  randombytes: ^0.1.1
   shared_preferences: ^0.5.4+6
+  keccak: ^1.0.3
+  crypton: ^1.0.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
