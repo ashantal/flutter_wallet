@@ -40,13 +40,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static String _mnemonic = "analyst end eye apple burden trust snack question feature monkey dinner loan";
   final networkInfo = NetworkInfo(id:"ec", bech32Hrp: "ec", lcdUrl: "");
-  //static String _path="m/7696500'/0'/0'/0'";
-  String _did_issuer = "did:ethr:0x199254bf2a7b5d0c705cdb1648f4165e64364696";
-  String _did_audience = "did:ethr:0xbc3ae59bc76f894822622cdef7a2018dbe353840";
-  static String _jwt = 
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NkstUiJ9.eyJpYXQiOjE1NzU4MzA4MDIsImV4cCI6MTU3NTgzMTQwMiwicmVxdWVzdGVkIjpbIm5hbWUiXSwidmVyaWZpZWQiOlsiVXBvcnRsYW5kaWEgQ2l0eSBJRCJdLCJjYWxsYmFjayI6Imh0dHBzOi8vODAyNjU5ZmMubmdyb2suaW8vY2FsbGJhY2siLCJ0eXBlIjoic2hhcmVSZXEiLCJpc3MiOiJkaWQ6ZXRocjoweGJjM2FlNTliYzc2Zjg5NDgyMjYyMmNkZWY3YTIwMThkYmUzNTM4NDAifQ.7fkW_9qGdZvcSsTpzJwUDK9j0TTipkITOLM0A2fBHUoQPuvVBBx_YjX8qeUrF1hXFsHGWPEf5MSbYf7wQLFGMAE";  //me.uport:request/eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NkstUiJ9.eyJpYXQiOjE1NzQ4ODI5NzAsImV4cCI6MTU3NDg4MzA5MCwicmVxdWVzdGVkIjpbIm5hbWUiXSwidmVyaWZpZWQiOlsiVXBvcnRsYW5kaWEgQ2l0eSBJRCJdLCJwZXJtaXNzaW9ucyI6WyJub3RpZmljYXRpb25zIl0sImNhbGxiYWNrIjoiaHR0cHM6Ly9hcGkudXBvcnQubWUvY2hhc3F1aS90b3BpYy9UWXpNVnZEUXoiLCJ2YyI6WyIvaXBmcy9RbWRXbnNnRDlOdVFjQmF1VThlQXJ4Uk1Da2JEUTQycThtaUNoYjZ3b0htUlRSIl0sImFjdCI6Im5vbmUiLCJ0eXBlIjoic2hhcmVSZXEiLCJpc3MiOiJkaWQ6ZXRocjoweGFiMjU4YTE3MjU2Y2NlZGI5MjJkNjgwYTVkZDIwNGJhNmI5ODFmMDkifQ.N72Nfug-YiEXemCtLJfApJlb0mGvX-YXGGv2JQ1zTz6ZOh7xLxEuQ4Itgc7hG7jD4mWrkL-P9kT_mweQRrivBAE";
   Future<String> _barcodeString;
-  JWT _parsedJwt = JWT.parse(_jwt);
+  String _jwt;
 
   JWT parseJwt(String token) {
     final request = token.split('/');
@@ -54,14 +49,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return JWT.parse(path[0]);
   }
 
-  Future<String> issueJWT(String did, Uint8List privateKey) async{
+  Future<String> issueJWT(var iss, var aud, var req, Uint8List privateKey) async{
     var builder = new JWTBuilder()
-      ..issuer = did //'did:ethr:0xb9c5714089478a327f09197987f16f9e5d936e8a'
-      ..audience= _parsedJwt.issuer //'did:ethr:0xbc3ae59bc76f894822622cdef7a2018dbe353840'
+      ..issuer = iss //'did:ethr:0xb9c5714089478a327f09197987f16f9e5d936e8a'
+      ..audience= aud //'did:ethr:0xbc3ae59bc76f894822622cdef7a2018dbe353840'
       ..expiresAt = new DateTime.now().add(new Duration(minutes: 3))
       ..setClaim('type', 'shareResp')
       ..setClaim('own', {'name': 'Ash'})
-      ..setClaim('req', _jwt);
+      ..setClaim('req', req)
+      ..setClaim('verified', _jwt);
 
     ES256S signer = new ES256S(privateKey);
     var signedToken = await builder.getSignedToken(signer);
@@ -83,9 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return isValid;
 }
 
-
-
-void makePostRequest() async {
+void shareCredentials() async {
   // set up POST request arguments
 final seed = bip39.mnemonicToSeed(_mnemonic);
 print("seed 0x${HEX.encode(seed)}");  
@@ -119,17 +113,20 @@ print("------priv-----");
 print("${HEX.encode(hdnode.privateKey)}");
 print("-------JWT-----");
 
-var jwtResponse = await issueJWT(did,hdnode.privateKey);
-print("$jwtResponse");
-
+Response resp = await get('https://db8818d6.ngrok.io');
+print(resp.body);
+_jwt = resp.body;
+     
+var parsedJwt = JWT.parse(_jwt);
+var jwtResponse = await issueJWT(did, parsedJwt.issuer, _jwt, hdnode.privateKey);
     
-  String url = _parsedJwt.getClaim('callback');
+  String url = parsedJwt.getClaim('callbackUrl');
   Map<String, String> headers = {"Content-type": "application/json"};
   String json = '{"access_token": "$jwtResponse"}';
-  Response response = await post(url, headers: headers, body: json);
-  print(response.statusCode);
-  print(response.body);
-  
+  resp = await post(url, headers: headers, body: json);
+
+  var creds = JWT.parse(resp.body);
+  print(creds.claims);
 }
 
   @override
@@ -143,9 +140,9 @@ print("$jwtResponse");
               future: _barcodeString,
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 if(snapshot.data != null){
-                  _parsedJwt = parseJwt(snapshot.data);
-                }                
-                makePostRequest();
+                  _jwt = snapshot.data;
+                }          
+                shareCredentials();
                 return new Text(json.encode(_jwt));
               }),              
               ),
