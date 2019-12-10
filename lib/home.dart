@@ -49,13 +49,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return JWT.parse(path[0]);
   }
 
-  Future<String> issueJWT(var iss, var aud, var req, Uint8List privateKey) async{
+  Future<String> issueJWT(var iss, var aud, var req, cred, Uint8List privateKey) async{
     var builder = new JWTBuilder()
       ..issuer = iss //'did:ethr:0xb9c5714089478a327f09197987f16f9e5d936e8a'
       ..audience= aud //'did:ethr:0xbc3ae59bc76f894822622cdef7a2018dbe353840'
       ..expiresAt = new DateTime.now().add(new Duration(minutes: 3))
       ..setClaim('type', 'shareResp')
-      ..setClaim('own', {'name': 'Ash'})
+      ..setClaim('own', cred)
       ..setClaim('req', req)
       ..setClaim('verified', _jwt);
 
@@ -113,12 +113,12 @@ print("------priv-----");
 print("${HEX.encode(hdnode.privateKey)}");
 print("-------JWT-----");
 
-Response resp = await get('https://db8818d6.ngrok.io');
+Response resp = await get('https://a0dfe831.ngrok.io');
 print(resp.body);
 _jwt = resp.body;
      
 var parsedJwt = JWT.parse(_jwt);
-var jwtResponse = await issueJWT(did, parsedJwt.issuer, _jwt, hdnode.privateKey);
+var jwtResponse = await issueJWT(did, parsedJwt.issuer, _jwt, 'name', hdnode.privateKey);
     
   String url = parsedJwt.getClaim('callbackUrl');
   Map<String, String> headers = {"Content-type": "application/json"};
