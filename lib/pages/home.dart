@@ -1,6 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:my_app/actions/credentials.dart';
+import 'package:my_app/store/credentials.dart';
+import 'package:my_app/widgets/counter.dart';
 import 'package:pointycastle/digests/ripemd160.dart';
 import 'package:pointycastle/digests/sha256.dart';
 import 'package:pointycastle/ecc/curves/secp256k1.dart';
@@ -38,6 +41,8 @@ class MyHomePage extends StatefulWidget {
 
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _bloc = CounterBloc();
+
   static String _mnemonic = "analyst end eye apple burden trust snack question feature monkey dinner loan";
   final networkInfo = NetworkInfo(id:"ec", bech32Hrp: "ec", lcdUrl: "");
   Future<String> _barcodeString;
@@ -136,7 +141,63 @@ var jwtResponse = await issueJWT(did, parsedJwt.issuer, _jwt, 'name', hdnode.pri
         title: const Text('QR Code Reader'),
       ),
       body: new Center(
-          child: new FutureBuilder<String>(
+          child: StreamBuilder(
+          stream: _bloc.counter,
+          initialData: 0,
+          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'You have pushed the button this many times:',
+                ),
+                Text(
+                  '${snapshot.data}',
+                  style: Theme.of(context).textTheme.display1,
+                ),
+                const Center(child: CounterLabel()),
+              ],
+            );
+          },
+        ),
+      ),      
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          FloatingActionButton(
+            onPressed: () => _bloc.counterEventSink.add(IncrementEvent()),
+            tooltip: 'Increment',
+            child: Icon(Icons.add),
+          ),
+          SizedBox(width: 10),
+          FloatingActionButton(
+            onPressed: () => _bloc.counterEventSink.add(DecrementEvent()),
+            tooltip: 'Decrement',
+            child: Icon(Icons.remove),
+          ),
+          SizedBox(width: 10),
+          FloatingActionButton(
+          onPressed: () => _bloc.counterEventSink.add(ScanEvent()),
+          tooltip: 'Read the QRCode',
+          child: new Icon(Icons.add_a_photo),
+        ),          
+          SizedBox(width: 10),
+          const IncrementCounterButton(),
+
+        ],
+      ),                           
+    );
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    _bloc.dispose();
+  }  
+}
+
+
+
+          /*new FutureBuilder<String>(
               future: _barcodeString,
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 if(snapshot.data != null){
@@ -161,6 +222,5 @@ var jwtResponse = await issueJWT(did, parsedJwt.issuer, _jwt, 'name', hdnode.pri
         tooltip: 'Read the QRCode',
         child: new Icon(Icons.add_a_photo),
       ),
-    );
-  }
-}
+      */
+

@@ -1,6 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'home.dart';
-class MyApp extends StatelessWidget {
+import 'package:my_app/pages/home.dart';
+import 'package:my_app/store/counter.dart';
+import 'package:my_app/widgets/counter.dart';
+import 'package:provider/provider.dart';
+/*class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -21,4 +25,45 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(title: 'QRC App'),
     );
   }
+}
+*/
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Counter()),
+      ],
+      child: Consumer<Counter>(
+        builder: (context, counter, _) {
+          return MaterialApp(
+            supportedLocales: const [Locale('en')],
+            localizationsDelegates: [
+              DefaultMaterialLocalizations.delegate,
+              DefaultWidgetsLocalizations.delegate,
+              _ExampleLocalizationsDelegate(counter.count),
+            ],
+            home: MyHomePage(),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ExampleLocalizationsDelegate
+    extends LocalizationsDelegate<ExampleLocalizations> {
+  const _ExampleLocalizationsDelegate(this.count);
+
+  final int count;
+
+  @override
+  bool isSupported(Locale locale) => locale.languageCode == 'en';
+
+  @override
+  Future<ExampleLocalizations> load(Locale locale) =>
+      SynchronousFuture(ExampleLocalizations(count));
+
+  @override
+  bool shouldReload(_ExampleLocalizationsDelegate old) => old.count != count;
 }
