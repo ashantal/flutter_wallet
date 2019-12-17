@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/pages/home.dart';
-import 'package:my_app/store/counter.dart';
+import 'package:my_app/providers/qrcode.dart';
+import 'package:my_app/providers/counter.dart';
+import 'package:my_app/providers/wallet.dart';
 import 'package:my_app/widgets/counter.dart';
 import 'package:provider/provider.dart';
 /*class MyApp extends StatelessWidget {
@@ -33,6 +35,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Counter()),
+        ChangeNotifierProvider(create: (_) => QRCode()),
+        ChangeNotifierProvider(create: (_)=> MyWallet())
       ],
       child: Consumer<Counter>(
         builder: (context, counter, _) {
