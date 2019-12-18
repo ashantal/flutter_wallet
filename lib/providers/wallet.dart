@@ -16,14 +16,14 @@ import 'dart:typed_data';
 class MyWallet with ChangeNotifier{
   static String _mnemonic = "analyst end eye apple burden trust snack question feature monkey dinner loan";
   final networkInfo = NetworkInfo(id:"ec", bech32Hrp: "ec", lcdUrl: "");
-  JWT _jwt = JWT.parse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
 
-  Map<String, dynamic> get claims => _jwt.claims;
+  var _credentials = new List<JWT>();
+  List<JWT> get credentials => _credentials;
 
-  void load(String token){
-    _jwt = JWT.parse(token);
-    print(claims);
+  void add(String token){
+    var jwt = JWT.parse(token);
 
+    _credentials.add(jwt);
     notifyListeners();
   }
 
@@ -70,14 +70,13 @@ class MyWallet with ChangeNotifier{
     String json = '{"access_token": "$jwtResponse"}';
     Response resp = await post(url, headers: headers, body: json);
 
-    load(resp.body);
+    add(resp.body);
   }
 
   void initCredentials(String token) async{
-    Response resp = await get('https://cc6b6971.ngrok.io');
-    print(resp.body);
-
-    requestCredentials(resp.body);
+        Response resp = await get('https://33758a6c.ngrok.io');
+        print(resp.body);
+        requestCredentials(resp.body);
   }
 
 

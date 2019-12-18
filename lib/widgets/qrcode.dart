@@ -22,6 +22,22 @@ class QRCodeScanButton extends StatelessWidget {
   }
 }
 
+class UserConsentButton extends StatelessWidget {
+  const UserConsentButton({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        Provider.of<MyWallet>(context, listen: false).initCredentials(
+          Provider.of<QRCode>(context,listen:false).code
+        );
+      },
+      tooltip: 'Scan',
+      child: const Icon(Icons.screen_share),
+    );
+  }
+}
 
 class QRCodeLabel extends StatelessWidget {
   const QRCodeLabel({Key key}) : super(key: key);
@@ -29,21 +45,20 @@ class QRCodeLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final qr = Provider.of<QRCode>(context);
-
-    if(qr.code!=null){
-      Provider.of<MyWallet>(context,listen:false).initCredentials(qr.code);
-    }
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         const Text(
-          'Scanned Code:',
+          'Share:',
         ),
+        SizedBox(height: 10,),
         Text(
           '${qr.code}',
           style: Theme.of(context).textTheme.display1,
         ),
+        SizedBox(height: 30,),
+        qr.code!=null?new UserConsentButton():Text('-')
       ],
     );
   }

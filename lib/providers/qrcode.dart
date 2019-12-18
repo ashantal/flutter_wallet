@@ -1,6 +1,7 @@
 import 'package:qrcode_reader/qrcode_reader.dart';
 import 'package:flutter/foundation.dart';
 class QRCode with ChangeNotifier{
+  int attempt = 0;
   String _code;
   String get code => _code;
 
@@ -13,9 +14,10 @@ class QRCode with ChangeNotifier{
           .setExecuteAfterPermissionGranted(true);
       _code = await qc.scan();
       
-      if(_code==null){
-        _code="iPhone only";
+      if(_code==null && attempt++ > 1){
+        _code="$attempt (iPhone only)";
       }
+      
       notifyListeners();
   }
 }

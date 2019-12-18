@@ -12,15 +12,10 @@ class WalletLabel extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        const Text(
-          'Claims:',
-        ),
-        Text(
-          '${wallet.claims['name']}',
-          style: Theme.of(context).textTheme.display1,
-        ),
-      ],
+      children:
+        wallet.credentials.map((credential)=>
+          Text('${credential.claims['name']}')   
+        ).toList()
     );
   }
 }
