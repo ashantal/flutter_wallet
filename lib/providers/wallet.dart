@@ -28,7 +28,7 @@ class MyWallet with ChangeNotifier{
   }
 
 
-  void requestCredentials(String token) async {
+  void requestCredentials(String token, bool receive) async {
   // set up POST request arguments
     final seed = bip39.mnemonicToSeed(_mnemonic);
     print("seed 0x${HEX.encode(seed)}");  
@@ -69,14 +69,22 @@ class MyWallet with ChangeNotifier{
     Map<String, String> headers = {"Content-type": "application/json"};
     String json = '{"access_token": "$jwtResponse"}';
     Response resp = await post(url, headers: headers, body: json);
-
-    add(resp.body);
+    
+    if(receive){
+      add(resp.body);
+    }
   }
 
   void initCredentials(String token) async{
         Response resp = await get('https://33758a6c.ngrok.io');
         print(resp.body);
-        requestCredentials(resp.body);
+        requestCredentials(resp.body, true);
+  }
+
+  void shareCredentials(String token) async{
+        Response resp = await get('https://33758a6c.ngrok.io');
+        print(resp.body);
+        requestCredentials(resp.body, false);
   }
 
 
