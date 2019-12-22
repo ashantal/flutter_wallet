@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/providers/notifications.dart';
 import 'package:pointycastle/ecc/curves/secp256k1.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 import 'package:sacco/sacco.dart';
 import 'package:my_app/service/ES256S.dart';
 import 'package:hex/hex.dart';
@@ -15,27 +17,27 @@ import 'dart:typed_data';
 
 class MyWallet with ChangeNotifier{
   static String _mnemonic = "analyst end eye apple burden trust snack question feature monkey dinner loan";
+  static String _path = "m/7696500'/0'/0'/0'";          
+
   final networkInfo = NetworkInfo(id:"ec", bech32Hrp: "ec", lcdUrl: "");
 
   var _credentials = new List<JWT>();
   List<JWT> get credentials => _credentials;
 
-  void add(String token){
-    var jwt = JWT.parse(token);
-
+  void add(JWT jwt){
     _credentials.add(jwt);
+
     notifyListeners();
   }
 
 
-  void requestCredentials(String token, bool receive) async {
+  Future<String> sendCredentials(String token) async {
   // set up POST request arguments
     final seed = bip39.mnemonicToSeed(_mnemonic);
     print("seed 0x${HEX.encode(seed)}");  
     final root = bip32.BIP32.fromSeed(seed);
 
-    var path = "m/7696500'/0'/0'/0'";          
-    var hdnode = root.derivePath(path);
+    var hdnode = root.derivePath(_path);
     var secp256k1 = ECCurve_secp256k1();
     var point = secp256k1.G;
     // Compute the curve point associated to the private key
@@ -69,22 +71,12 @@ class MyWallet with ChangeNotifier{
     Map<String, String> headers = {"Content-type": "application/json"};
     String json = '{"access_token": "$jwtResponse"}';
     Response resp = await post(url, headers: headers, body: json);
-    
-    if(receive){
-      add(resp.body);
-    }
+    return resp.body;
   }
 
-  void initCredentials(String token) async{
-        Response resp = await get('https://33758a6c.ngrok.io');
-        print(resp.body);
-        requestCredentials(resp.body, true);
-  }
-
-  void shareCredentials(String token) async{
-        Response resp = await get('https://33758a6c.ngrok.io');
-        print(resp.body);
-        requestCredentials(resp.body, false);
+  Future<JWT> shareCredentials(String token) async{
+    String resp = await sendCredentials(token);
+    return JWT.parse(resp);
   }
 
 

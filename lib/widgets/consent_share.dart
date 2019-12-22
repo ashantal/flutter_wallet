@@ -1,57 +1,54 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/providers/notifications.dart';
 import 'package:my_app/providers/wallet.dart';
 import 'package:provider/provider.dart';
 import 'package:my_app/providers/qrcode.dart';
 
-class UserConsent extends StatelessWidget {
-  const UserConsent({Key key}) : super(key: key);
+class UserConsentShare extends StatelessWidget {
+  const UserConsentShare({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var wallet = Provider.of<MyWallet>(context, listen: false);
     final qr = Provider.of<QRCode>(context);
     return 
     (qr.code!=null)?
-    
     Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(
-          (qr.request==RequestType.CredentialRequest?'Accept Credentails':'Share Credentials'),
-        ),
+        Text('Share Credentials'),
         SizedBox(height: 10,),
         Text(
-          '${qr.code}',
-          style: Theme.of(context).textTheme.display1,
+          '${wallet.parseJwt(qr.code).claims}',
         ),
         SizedBox(height: 30,),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children:<Widget>[
             FloatingActionButton(
-              onPressed: () {
-                var wallet = Provider.of<MyWallet>(context, listen: false);
-                if(qr.request==RequestType.CredentialRequest){
-                    wallet.initCredentials(qr.code);
-                }else{
-                    wallet.shareCredentials(qr.code);
-                }
+              onPressed: () async {
+                var jwt = await wallet.shareCredentials(qr.code);
+
+                var notifications = Provider.of<Notifications>(context, listen: false);
+                notifications.push(jwt);
+
+                Navigator.pop(context);
               },
-              tooltip: 'Consent',
-              child: Icon(
-                (qr.request==RequestType.CredentialRequest?Icons.add:Icons.screen_share)
-              ),
+              heroTag: "Share",              
+              tooltip: 'Share',
+              child: Icon(Icons.screen_share),
             ),
             SizedBox(width:10),
             FloatingActionButton(
               onPressed: () {
                 qr.clear();
+                Navigator.pop(context);
               },
-              tooltip: 'Consent',
-              child: Icon(
-                Icons.not_interested
-              )
+              heroTag: "Cancel",              
+              tooltip: 'Cancel',
+              child: Icon(Icons.not_interested)
             ),
           ]
         )

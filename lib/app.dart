@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/pages/home.dart';
 import 'package:my_app/pages/scan.dart';
+import 'package:my_app/providers/notifications.dart';
 import 'package:my_app/providers/qrcode.dart';
 import 'package:my_app/providers/wallet.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => Notifications()),
         ChangeNotifierProvider(create: (_) => QRCode()),
         ChangeNotifierProvider(create: (_)=> MyWallet())
       ],

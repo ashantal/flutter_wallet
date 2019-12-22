@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/widgets/consent.dart';
-import 'package:my_app/widgets/share.dart';
+import 'package:my_app/widgets/consent_share.dart';
 
 class QRScanPage extends StatelessWidget {
   QRScanPage({Key key, this.title}) : super(key: key);
@@ -16,17 +15,10 @@ class QRScanPage extends StatelessWidget {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Center(child: UserConsent()),
+                const Center(child: UserConsentShare()),
               ],
             )
       ),      
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          SizedBox(width: 10),
-          const ShareButton(),
-        ],
-      ),                           
     );
   }
 }
