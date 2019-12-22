@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/pages/credentials.dart';
 import 'package:my_app/pages/home.dart';
 import 'package:my_app/pages/scan.dart';
 import 'package:my_app/providers/notifications.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
               '/': (context) => MyHomePage(),
               // When navigating to the "/second" route, build the SecondScreen widget.
               '/scan': (context) => QRScanPage(),
+              '/credentials': (context) => MyCredentialsPage(),
             }            
           );
         },

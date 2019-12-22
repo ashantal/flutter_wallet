@@ -18,10 +18,10 @@ class UserConsentShare extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text('Share Credentials'),
+        Text('Share Credentials With'),
         SizedBox(height: 10,),
         Text(
-          '${wallet.parseJwt(qr.code).claims}',
+          '${wallet.parseJwt(qr.code).claims['iss']}',
         ),
         SizedBox(height: 30,),
         Row(

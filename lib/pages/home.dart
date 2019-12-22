@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/widgets/my_credentials.dart';
 import 'package:my_app/widgets/mywallet.dart';
 import 'package:my_app/widgets/consent_accept.dart';
 import 'package:my_app/widgets/scan_qrcode.dart';
@@ -17,7 +18,6 @@ class MyHomePage extends StatelessWidget {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Center(child: WalletLabel()),
                 const Center(child: UserConsentAccept()),
               ],
             )
@@ -26,6 +26,8 @@ class MyHomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           const ScanButton(),
+          const SizedBox(width:10),
+          const MyCredentialsButton(),
         ],
       ),                           
     );
