@@ -1,28 +1,64 @@
 PODS:
+  - adhara_socket_io (0.0.1):
+    - Flutter
+    - Socket.IO-Client-Swift
+    - Starscream
   - Flutter (1.0.0)
+  - flutter_socket_io (0.0.1):
+    - Flutter
   - qrcode_reader (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
     - Flutter
+  - shared_preferences_macos (0.0.1):
+    - Flutter
+  - shared_preferences_web (0.0.1):
+    - Flutter
+  - Socket.IO-Client-Swift (15.2.0):
+    - Starscream (~> 3.1)
+  - Starscream (3.1.1)
 
 DEPENDENCIES:
+  - adhara_socket_io (from `.symlinks/plugins/adhara_socket_io/ios`)
   - Flutter (from `Flutter`)
+  - flutter_socket_io (from `.symlinks/plugins/flutter_socket_io/ios`)
   - qrcode_reader (from `.symlinks/plugins/qrcode_reader/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
+  - shared_preferences_web (from `.symlinks/plugins/shared_preferences_web/ios`)
+
+SPEC REPOS:
+  trunk:
+    - Socket.IO-Client-Swift
+    - Starscream
 
 EXTERNAL SOURCES:
+  adhara_socket_io:
+    :path: ".symlinks/plugins/adhara_socket_io/ios"
   Flutter:
     :path: Flutter
+  flutter_socket_io:
+    :path: ".symlinks/plugins/flutter_socket_io/ios"
   qrcode_reader:
     :path: ".symlinks/plugins/qrcode_reader/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
+  shared_preferences_macos:
+    :path: ".symlinks/plugins/shared_preferences_macos/ios"
+  shared_preferences_web:
+    :path: ".symlinks/plugins/shared_preferences_web/ios"
 
 SPEC CHECKSUMS:
+  adhara_socket_io: a2f8b3079a0de70a1a3f5080a8429a4fb7ae9bea
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_socket_io: fce27977d95a82c181bd959180f33384f51a5973
   qrcode_reader: 09b34d43b4c08fe5b63a6e56c96789bcea7b9148
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
+  shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
+  shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
+  Socket.IO-Client-Swift: 1e3e3a1f09f3312a167f0d781eb2f383d477357c
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
 
-PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
+PODFILE CHECKSUM: e45c292f618eeca3034958d33b444b6e1249b55f
 
 COCOAPODS: 1.8.4

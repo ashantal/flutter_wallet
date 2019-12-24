@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/widgets/my_credentials.dart';
-import 'package:my_app/widgets/mywallet.dart';
 import 'package:my_app/widgets/consent_accept.dart';
 import 'package:my_app/widgets/scan_qrcode.dart';
 

@@ -5,6 +5,7 @@ import 'package:my_app/pages/scan.dart';
 import 'package:my_app/providers/notifications.dart';
 import 'package:my_app/providers/qrcode.dart';
 import 'package:my_app/providers/wallet.dart';
+import 'package:my_app/providers/monitor.dart';
 import 'package:provider/provider.dart';
 
 class MyApp extends StatelessWidget {
@@ -12,12 +13,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => Events()),
         ChangeNotifierProvider(create: (_) => Notifications()),
         ChangeNotifierProvider(create: (_) => QRCode()),
         ChangeNotifierProvider(create: (_)=> MyWallet())
       ],
-      child: Consumer<MyWallet>(
+      child: Consumer<Events>(
         builder: (context, counter, _) {
+          Provider.of<Events>(context,listen: false).init();
+
           return MaterialApp(
             supportedLocales: const [Locale('en')],
             localizationsDelegates: [
